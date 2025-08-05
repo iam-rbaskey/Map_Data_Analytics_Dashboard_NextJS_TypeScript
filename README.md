@@ -76,25 +76,25 @@ cd Map_Data_Analytics_Dashboard_NextJS_TypeScript
 ### 3. Install Dependencies
 
 npm install
-# or
+#### or
 yarn install
 
 ### 4. Configure Environment Variables
 
 Create a .env.local file:
 
-# Mapbox Access Token
+#### Mapbox Access Token
 NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_token_here
 
-# Optional: Open-Meteo API base
+#### Optional: Open-Meteo API base
 NEXT_PUBLIC_OPEN_METEO_API=https://api.open-meteo.com/v1/forecast
 
 ### 5. Run the Development Server
 
 npm run dev
-# or
+#### or
 yarn dev
 
-##Author
+## Author
 Riyanshu Baskey
 GitHub: @iam-rbaskey
