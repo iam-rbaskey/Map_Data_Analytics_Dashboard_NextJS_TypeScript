@@ -6,14 +6,14 @@ import { usePolygonStore } from '@/store/usePolygonStore';
 import { useTimelineStore } from '@/store/useTimelineStore';
 import { fetchWeatherData } from '@/utils/apiUtils';
 import { getColorFromRules } from '@/utils/colorUtils';
-import { updateDataAverages } from '@/ai/flows/intelligent-data-refresh'; //implemented gemini ai to intelligently manage data updates
-import { subDays, addDays, startOfDay, addHours, addWeeks } from 'date-fns';
+import { updateDataAverages } from '@/ai/flows/intelligent-data-refresh';
+import { subDays, startOfDay, addHours } from 'date-fns';
 import { centroid } from '@turf/turf';
 
 import InteractiveMap from './InteractiveMap';
-import TimelineSlider from './TimelineSlider';
 import Sidebar from './Sidebar';
 import { getStep } from '@/utils/dateUtils';
+import DynamicTimelineSlider from './DynamicTimelineSlider';
 
 export default function Dashboard() {
   const { polygons, updatePolygonData, updatePolygonColor } = usePolygonStore();
@@ -28,6 +28,7 @@ export default function Dashboard() {
     if (!isMounted) return;
 
     const fetchAndUpdateData = async (polygonState: ReturnType<typeof usePolygonStore.getState>['polygons'][string]) => {
+      if (!polygonState.geojson) return;
       const center = centroid(polygonState.geojson);
       const [longitude, latitude] = center.geometry.coordinates;
 
@@ -44,7 +45,6 @@ export default function Dashboard() {
         apiEndDate = new Date();
       }
        if (apiStartDate > new Date()) {
-         
         updatePolygonData(polygonState.id, {
           rawHourlyData: [],
           currentAverage: null,
@@ -52,7 +52,6 @@ export default function Dashboard() {
         });
         return;
       }
-
 
       const newData = await fetchWeatherData(latitude, longitude, apiStartDate, apiEndDate, polygonState.dataSource);
       
@@ -87,7 +86,7 @@ export default function Dashboard() {
           polygonId: polygonState.id,
           currentData: polygonState.rawHourlyData || [],
           newData: filteredNewData,
-          threshold: 1.0, // Significance threshold of 1 degree change
+          threshold: 1.0, 
         });
   
         if (aiResponse.significantChanges) {
@@ -119,11 +118,11 @@ export default function Dashboard() {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4 20V4H8V20H4ZM10 20V12H14V20H10ZM16 20V8H20V20H16Z" fill="hsl(var(--primary))"/>
           </svg>
-          <h1 className="text-xl font-bold">Analytics Dashboard</h1>
+          <h1 className="text-xl font-bold">MeteoMapper</h1>
         </div>
       </header>
       <div className="flex-shrink-0">
-        <TimelineSlider />
+        <DynamicTimelineSlider />
       </div>
       <main className="flex-grow relative">
         <InteractiveMap />
