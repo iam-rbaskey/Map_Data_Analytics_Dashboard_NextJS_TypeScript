@@ -118,7 +118,7 @@ export default function Dashboard() {
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4 20V4H8V20H4ZM10 20V12H14V20H10ZM16 20V8H20V20H16Z" fill="hsl(var(--primary))"/>
           </svg>
-          <h1 className="text-xl font-bold">MeteoMapper</h1>
+          <h1 className="text-xl font-bold">Analytics DashBoard</h1>
         </div>
       </header>
       <div className="flex-shrink-0">
