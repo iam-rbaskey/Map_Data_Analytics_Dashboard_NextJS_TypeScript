@@ -1,74 +1,100 @@
-An Interactive GIS Data Visualization Tool
+# An Interactive GIS Data Visualization Tool
 
-It is a sophisticated, web-based dashboard designed for visualizing time-series geospatial data. It empowers users to draw custom polygonal regions on an interactive map, connect them to real-world weather data, and define custom, rule-based color schemes to see how data changes over time and space.
+This is a sophisticated, web-based dashboard designed for **visualizing time-series geospatial data**. It enables users to draw custom polygonal regions on an interactive map, connect them to real-world weather data via the Open-Meteo API, and define dynamic color rules that change over time and space.
 
-The application is built with a modern, component-based architecture and leverages a powerful set of technologies to deliver a seamless and interactive user experience.
+Built with modern frontend architecture and smart data-handling mechanisms, it offers a **highly responsive**, **component-driven**, and **AI-enhanced** user experience.
 
-## Core Features
+---
 
-- **Interactive Map Display**: Utilizes Mapbox GL JS to render a high-performance, interactive map. Users can pan across the map, with a fixed zoom level to maintain a consistent area of analysis (2 sq. km).
+## Features
 
-- **Dynamic Timeline Control**:
-    - A versatile timeline slider allows for data exploration across a 30-day window.
-    - Supports both **single-point** (a specific hour) and **range-based** (a window of time) selection.
-    - Features selectable time units (**Hour, Day, Week**) to adjust the granularity of the analysis.
-    - Includes **playback controls** (play, pause, step forward/backward) to animate the data visualization over time.
+### Interactive Map
+- Rendered using **Mapbox GL JS**
+- Fixed zoom level for consistent 2 sq. km area
+- Supports polygon drawing (3–12 vertices)
 
-- **Polygon Drawing & Management**:
-    - Users can draw custom polygons (with 3 to 12 vertices) directly on the map.
-    - A dedicated sidebar allows users to view a list of all drawn polygons, select them for editing, and delete them.
-    - Polygon geometries and their associated rules are persisted in the browser's `localStorage`, saving work between sessions.
+### Timeline Slider
+- Explore data across a **30-day window**
+- Time unit selection: **Hour**, **Day**, **Week**
+- Dual-mode: **single-point** or **range-based**
+- Includes playback controls (⏪ ⏯️ ⏩)
 
-- **Rule-Based Data-Driven Styling**:
-    - Each polygon can be assigned a data source (e.g., temperature, humidity).
-    - A powerful rule engine allows users to define conditional color-coding. For example, a user can set a rule like `temperature > 25°C → Red`.
-    - Polygons automatically update their color on the map as the data for the selected time window changes, providing instant visual feedback.
+### Polygon Drawing & Management
+- Draw & edit polygons directly on the map
+- Manage polygons via a sidebar (edit/delete)
+- Persist data using `localStorage`
 
-- **Real-Time API Integration**:
-    - Fetches historical weather data from the **Open-Meteo API**.
-    - Dynamically constructs API requests based on the polygon's location (centroid) and the selected time window from the slider.
+### Rule-Based Styling
+- Define rules like `temperature > 25 → Red`
+- Real-time color updates based on rules and weather data
+- Supports multiple data sources (temperature, humidity, etc.)
 
-- **AI-Enhanced Data Refresh**:
-    - Integrates a **Genkit AI flow** to intelligently manage data updates.
-    - The AI analyzes incoming data to determine if changes are significant enough to warrant a visual refresh, optimizing performance by avoiding unnecessary re-renders for minor fluctuations.
+### API & AI Integration
+- Historical data fetched from **Open-Meteo API**
+- Uses **@turf/turf** to get polygon centroid for precise queries
+- Optional: **Genkit + Google Gemini AI** filters unnecessary re-renders
 
-- **Responsive & Modern UI**:
-    - Built with a clean, dark-themed interface suitable for analytics applications.
-    - The layout is fully responsive and adapts for use on both desktop and mobile devices.
+### Modern UI/UX
+- Built with **Next.js + Tailwind CSS + ShadCN UI**
+- Responsive for both desktop and mobile
+- Centralized global state management using **Zustand**
 
-## Technology Stack
+---
 
-### Frontend
+## Tech Stack
 
-- **Next.js**: The core React framework, providing a robust foundation with features like Server Components and an App Router-based architecture.
-- **React**: Used for building the component-based, interactive user interface.
-- **TypeScript**: Ensures type safety and improves code quality and maintainability.
-- **Tailwind CSS**: A utility-first CSS framework for creating the custom, responsive design.
-- **ShadCN UI**: Provides a set of beautifully designed and accessible UI components that serve as the building blocks for the dashboard's interface (e.g., sliders, dialogs, buttons).
-- **Zustand**: A lightweight state management library used for managing global application state for polygons and the timeline, with middleware for `localStorage` persistence.
+| Area         | Tech Used                                      |
+|--------------|------------------------------------------------|
+| Frontend     | Next.js, React, TypeScript                     |
+| UI Styling   | Tailwind CSS, ShadCN UI                        |
+| Maps & GIS   | Mapbox GL JS, @turf/turf                       |
+| State Mgmt   | Zustand (with `localStorage` persistence)     |
+| Weather API  | [Open-Meteo API](https://open-meteo.com)       |
+| AI (Optional)| Genkit + Google Gemini                         |
 
-### Geospatial
+---
 
-- **Mapbox GL JS**: The primary library for rendering the interactive map and handling user drawing interactions.
-- **@turf/turf**: A JavaScript library for advanced geospatial analysis, used here to calculate the centroid of polygons for API queries.
+##  Getting Started
 
-### Generative AI
+### 1. Prerequisites
 
-- **Genkit**: The framework used to create and manage the AI flow for intelligent data refresh. It provides the structure for defining prompts, schemas, and orchestrating calls to the generative model.
-- **Google Gemini**: The underlying large language model used by the Genkit flow to perform the data analysis.
+Make sure you have:
 
-## Architectural Overview
+- Node.js ≥ 18.x
+- npm or yarn
+- Git
+- A [Mapbox API key](https://account.mapbox.com/)
+- (Optional) Google Cloud account with Genkit if using AI
 
-The application is structured around a few key concepts:
+---
 
-1.  **Component-Driven UI**: The interface is broken down into reusable React components (`Dashboard`, `InteractiveMap`, `TimelineSlider`, `Sidebar`, etc.), making the codebase modular and easier to maintain.
+### 2. ⬇️ Clone the Repository
 
-2.  **Centralized State Management**: Global state (like the list of polygons, their rules, and the current timeline settings) is managed in **Zustand stores**. This allows different components to share and react to state changes without complex prop-drilling.
+git clone https://github.com/iam-rbaskey/Map_Data_Analytics_Dashboard_NextJS_TypeScript.git
+cd Map_Data_Analytics_Dashboard_NextJS_TypeScript
 
-3.  **Event-Driven Data Flow**: User interactions with the **Timeline Slider** or the **Polygon Manager** in the sidebar trigger state updates in the Zustand stores. The main Dashboard component listens for these changes via a useEffect hook.
+### 3. Install Dependencies
 
-4.  **Dynamic Data Fetching**: When a state change is detected, the Dashboard component orchestrates the data fetching process. It calculates the necessary parameters (like location and date range), calls a utility function to fetch data from the **Open-Meteo API**, and processes the results.
+npm install
+# or
+yarn install
 
-5.  **Reactive Map Updates**: Based on the (potentially AI-filtered) data, a color is calculated using a custom utility function. This new color and data are saved back to the Zustand store. The InteractiveMap component, also subscribed to the store, detects this change and re-renders the polygons on the map with their new colors.
+### 4. Configure Environment Variables
 
+Create a .env.local file:
 
+# Mapbox Access Token
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_token_here
+
+# Optional: Open-Meteo API base
+NEXT_PUBLIC_OPEN_METEO_API=https://api.open-meteo.com/v1/forecast
+
+### 5. Run the Development Server
+
+npm run dev
+# or
+yarn dev
+
+##Author
+Riyanshu Baskey
+GitHub: @iam-rbaskey
